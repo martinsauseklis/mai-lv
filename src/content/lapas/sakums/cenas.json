@@ -1,0 +1,32 @@
+{
+  "virsraksts": "Pakalpojumu cenas",
+  "limeni": [
+    {
+      "nosaukums": "Konsultācija",
+      "cena": 0,
+      "cenasPrefikss": "",
+      "ilgums": "30 minūtes",
+      "kam": "Apmēram pusstundas laikā noskaidrosim automatizācijas iespējas, pārlūkojot procesus Jūsu uzņēmumā",
+      "izcelt": true,
+      "pogasTeksts": "Pieteikties",
+      "pogasSaite": "https://cal.com/martins-auseklis-kxjhzm/konsultacija",
+      "sanem": [
+        "Procesu izvērtējums pēc iespējām tos automatizēt",
+        "Atbildes uz jūsu jautājumiem"
+      ]
+    },
+    {
+      "nosaukums": "Viena procesa automatizācija",
+      "cena": 150,
+      "cenasPrefikss": "no",
+      "ilgums": "1 nedēļa",
+      "kam": "Cena mainās atkarībā no procesa sarežģītības, resursu nepieciešamības un procesa soļu skaita, pirms izstrādes, cena tiek saskaņota.",
+      "izcelt": false,
+      "sanem": [
+        "Procesa automatizācija",
+        "Automatizācijas monitoringa uzstādīšana",
+        "Darbinieku apmācība (ja tāda ir nepieciešama)"
+      ]
+    }
+  ]
+}

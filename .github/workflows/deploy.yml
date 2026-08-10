@@ -1,0 +1,53 @@
+# Build the Astro site and publish it to GitHub Pages.
+#
+# Keystatic is dev-only (see astro.config.mjs), so nothing admin-related is built
+# or deployed here — the artifact is plain static files.
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+  # THE TIME GATE NEEDS THIS. A piece is public only once its publicetsTimekli
+  # date has passed, and that comparison happens at BUILD time — not when a
+  # visitor asks for the page. Without a scheduled rebuild, a piece dated for
+  # next Thursday would simply never appear unless something else happened to
+  # trigger a deploy that day. 05:10 UTC daily.
+  schedule:
+    - cron: '10 5 * * *'
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Let a running deploy finish; queue at most one behind it.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 10 }
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: dist }
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

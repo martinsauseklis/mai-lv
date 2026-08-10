@@ -1,0 +1,82 @@
+---
+import Base from '../../layouts/Base.astro';
+import { publicArticles, formatDate } from '../../lib/articles';
+import { render } from 'astro:content';
+
+// Only public pieces get a page. Inside the gate there is no file to find.
+export async function getStaticPaths() {
+  const raksti = await publicArticles();
+  return raksti.map((r) => ({ params: { id: r.id }, props: { raksts: r } }));
+}
+
+const { raksts } = Astro.props;
+const { Content } = await render(raksts);
+
+const url = new URL(`/raksti/${raksts.id}/`, Astro.site).href;
+
+// NOZARE maps the sector tag onto something a search engine understands as a topic.
+const NOZARE: Record<string, string> = {
+  parvadajumi: 'Pārvadājumi',
+  vairumtirdznieciba: 'Vairumtirdzniecība',
+  buvnieciba: 'Būvniecība',
+  mazumtirdznieciba: 'Mazumtirdzniecība',
+  nav: '',
+};
+const sadala = NOZARE[raksts.data.nozare] || undefined;
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: raksts.data.virsraksts,
+    description: raksts.data.kopsavilkums,
+    datePublished: raksts.data.publicetsTimekli.toISOString(),
+    dateModified: raksts.data.publicetsTimekli.toISOString(),
+    inLanguage: 'lv',
+    url,
+    mainEntityOfPage: { '@type': 'WebPage', '@id': url },
+    image: new URL('/og.png', Astro.site).href,
+    ...(sadala ? { articleSection: sadala } : {}),
+    author: { '@type': 'Person', name: 'Mārtiņš Auseklis', url: 'https://mai.lv' },
+    publisher: { '@type': 'Person', name: 'Mārtiņš Auseklis', url: 'https://mai.lv' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Sākums', item: new URL('/', Astro.site).href },
+      { '@type': 'ListItem', position: 2, name: 'Raksti', item: new URL('/raksti/', Astro.site).href },
+      { '@type': 'ListItem', position: 3, name: raksts.data.virsraksts, item: url },
+    ],
+  },
+];
+---
+<Base
+  title={`${raksts.data.virsraksts} — mai.lv`}
+  description={raksts.data.kopsavilkums}
+  schema={schema}
+  ogType="article"
+  publishedTime={raksts.data.publicetsTimekli}
+  section={sadala}
+>
+  <article>
+    <h1>{raksts.data.virsraksts}</h1>
+    <p class="formatDate">{formatDate(raksts.data.nosutits)}</p>
+    <div class="proza"><Content /></div>
+  </article>
+  <p class="atpakal"><a href="/raksti">← Visi raksti</a></p>
+</Base>
+
+<style>
+  h1{max-width:20ch;margin-bottom:8px}
+  .formatDate{font-size:12.5px;color:var(--faint);margin-bottom:30px}
+  .proza{max-width:var(--measure)}
+  .proza :global(p){font-size:16.5px;line-height:1.75;margin:0 0 16px}
+  .proza :global(h2){font-size:20px;margin:32px 0 12px}
+  .proza :global(ul){margin:0 0 16px;padding-left:20px;color:var(--muted)}
+  .proza :global(li){margin:0 0 8px;font-size:16.5px;line-height:1.7}
+  .proza :global(strong){color:var(--ink)}
+  .atpakal{margin-top:44px;font-size:14.5px}
+  .atpakal a{color:var(--muted);text-decoration:none}
+  .atpakal a:hover{color:var(--ink)}
+</style>

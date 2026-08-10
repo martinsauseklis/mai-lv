@@ -1,0 +1,64 @@
+<!doctype html>
+<meta charset="utf-8">
+<!--
+  Source for public/og.png — the link-preview card.
+
+  WHY HTML AND NOT A SCRIPT: the brand faces ship as woff2 only, and Pillow cannot
+  read woff2. Rendering the card in Chrome uses the very same font files and the
+  very same colours as the site, so the preview can never drift from the page.
+
+  REGENERATE:  bash tools/og-card.sh
+  The text lives here, in his words. Edit it here, then re-run.
+-->
+<style>
+  /* latin-ext carries every Latvian diacritic (ā č ē ģ ī ķ ļ ņ š ū ž), so both
+     subsets are needed — latin alone renders them as blank boxes. */
+  @font-face {
+    font-family: 'Bricolage'; font-weight: 100 900; font-display: block;
+    src: url('../node_modules/.pnpm/@fontsource-variable+bricolage-grotesque@5.3.0/node_modules/@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+2000-206F, U+2192, U+2212, U+2215;
+  }
+  @font-face {
+    font-family: 'Bricolage'; font-weight: 100 900; font-display: block;
+    src: url('../node_modules/.pnpm/@fontsource-variable+bricolage-grotesque@5.3.0/node_modules/@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-ext-wght-normal.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+1E00-1EFF, U+2020, U+20A0-20AB;
+  }
+  @font-face {
+    font-family: 'Onest'; font-weight: 100 900; font-display: block;
+    src: url('../node_modules/.pnpm/@fontsource-variable+onest@5.3.0/node_modules/@fontsource-variable/onest/files/onest-latin-wght-normal.woff2') format('woff2');
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+2000-206F, U+2212;
+  }
+  @font-face {
+    font-family: 'Onest'; font-weight: 100 900; font-display: block;
+    src: url('../node_modules/.pnpm/@fontsource-variable+onest@5.3.0/node_modules/@fontsource-variable/onest/files/onest-latin-ext-wght-normal.woff2') format('woff2');
+    unicode-range: U+0100-02BA, U+1E00-1EFF, U+20A0-20AB;
+  }
+
+  /* Straight from src/styles/tokens.css — do not re-pick these by eye. */
+  :root { --bg:#0b0b0d; --ink:#f4f4f5; --muted:#9a9aa2; --brand:#d9a441; }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    width:1200px; height:630px; background:var(--bg);
+    display:flex; flex-direction:column; justify-content:center;
+    padding:0 86px; -webkit-font-smoothing:antialiased;
+  }
+  .wm {
+    font-family:'Onest'; font-weight:600; font-size:26px; color:var(--muted);
+    letter-spacing:-.01em; position:absolute; top:78px; left:86px;
+  }
+  h1 {
+    font-family:'Bricolage'; font-weight:700; font-size:70px; line-height:1.06;
+    color:var(--ink); letter-spacing:-.025em; max-width:17ch;
+  }
+  p {
+    font-family:'Onest'; font-weight:400; font-size:25px; line-height:1.45;
+    color:var(--muted); margin-top:30px; max-width:40ch;
+  }
+  .rule { width:132px; height:7px; background:var(--brand); margin-top:44px; }
+</style>
+
+<div class="wm">mai.lv</div>
+<h1>MI asistēta automatizācija Jūsu uzņēmumam</h1>
+<p>Rēķini, datu apstrāde, e-pastu nosūtīšana, klientu pieprasījumu apstrāde un cita veida automatizācijas</p>
+<div class="rule"></div>

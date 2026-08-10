@@ -1,0 +1,96 @@
+---
+import Base from '../layouts/Base.astro';
+import t from '../content/lapas/vestkopa.json';
+---
+<Base
+  title="Vēstkopa — mai.lv"
+  description="Vēstkopa ar praktiskiem padomiem un noderīgiem MI rīkiem, kas palīdzēs atgūt Jūsu laiku."
+>
+  <h1>{t.virsraksts}</h1>
+  <p class="sub">{t.apaksvirsraksts}</p>
+
+  <div class="frm">
+    <script
+      async
+      src="https://eocampaign1.com/form/dae5ac3e-90b7-11f1-855d-fdd3d718a2cb.js"
+      data-form="dae5ac3e-90b7-11f1-855d-fdd3d718a2cb"></script>
+    <p class="fine">{t.smalkais}</p>
+  </div>
+
+  <p class="cap arhivs-saite"><a href="/raksti">{t.arhivaSaite}</a></p>
+</Base>
+
+<style is:global>
+  /* ── EmailOctopus ──────────────────────────────────────────────────────
+     Their embed exposes its whole theme as custom properties, so the fix is
+     to point those at our tokens rather than fight the stylesheet with
+     !important. Two things learned by reading the live DOM, both non-obvious:
+
+       · they declare the variables TWICE — on .inline-container and again on
+         the <form> — so setting them on the container alone gets overwritten
+         further down. Hence both selectors.
+       · [data-form] and .inline-container appear in the selectors only to
+         out-specify their own rules. Nothing depends on the form id.
+
+     Kept global because the embed injects its markup after hydration, so
+     Astro's scoped-style attributes never reach it.
+     ────────────────────────────────────────────────────────────────────── */
+  .frm .inline-container[data-form],
+  .frm .inline-container .emailoctopus-form{
+    --font-family:var(--sans);
+    --base-font-size:16px;             /* 16px is what stops iOS zooming on focus */
+    --background-color:transparent;    /* no card — the page shows through */
+    --border-color:transparent;
+    --text-colour:var(--muted);
+    --eo-form-font-color:var(--ink);
+    --eo-form-placeholder:var(--muted);
+    --label-colour:var(--muted);
+    --label-size:12px;
+    --field-colour:transparent;
+    --field-border-colour:var(--line);
+    --button-colour:var(--ink);
+    --button-text-colour:var(--bg);
+    --primary-brand-colour:var(--ink);
+  }
+  .frm .inline-container[data-form]{padding:0;border:0;box-shadow:none}
+
+  .frm .inline-container .form-control{
+    border-radius:var(--r-sm);padding:13px 14px;box-shadow:none;color:var(--ink);
+    -webkit-text-fill-color:var(--ink);caret-color:var(--ink)}
+  .frm .inline-container .form-control::placeholder{color:var(--muted);opacity:1}
+  .frm .inline-container .form-control:focus{
+    outline:none;box-shadow:none;border-color:var(--ink);color:var(--ink)}
+
+  /* iOS, two separate problems invisible on a desktop browser: Safari paints
+     autofilled text with -webkit-text-fill-color and ignores `color`, and it
+     paints its own field background that `background` cannot override — the
+     inset shadow is the only way to cover it. */
+  .frm .inline-container .form-control:-webkit-autofill,
+  .frm .inline-container .form-control:-webkit-autofill:focus{
+    -webkit-text-fill-color:var(--ink);
+    -webkit-box-shadow:0 0 0 1000px var(--bg) inset;
+    caret-color:var(--ink)}
+
+  .frm .inline-container .btn{
+    border-radius:var(--r-sm);min-height:48px;   /* comfortable thumb target */
+    font-weight:600;cursor:pointer}
+
+  /* Their credit stays — the price of the free tier — but it whispers. The word
+     is real text so it takes a colour; the octopus is a background-image on
+     a::before, so it can only take a filter, and that filter must flip in dark
+     mode or the mark disappears. */
+  .frm .mastfoot p, .frm .mastfoot a{color:var(--faint);text-decoration:none}
+  .frm .mastfoot a::before{filter:grayscale(1);opacity:.75}
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]) .frm .mastfoot a::before{filter:grayscale(1) invert(1)}
+  }
+  :root[data-theme="dark"] .frm .mastfoot a::before{filter:grayscale(1) invert(1)}
+</style>
+
+<style>
+  h1{max-width:18ch;margin-bottom:16px}
+  .sub{font-size:17.5px;color:var(--muted);max-width:46ch;margin-bottom:26px}
+  .frm{max-width:400px}
+  .fine{font-size:12.5px;color:var(--faint);margin:12px 0 0}
+  .arhivs-saite{margin-top:40px}
+</style>

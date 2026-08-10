@@ -1,0 +1,290 @@
+---
+import Base from '../layouts/Base.astro';
+import hero from '../content/lapas/sakums/hero.json';
+import problemas from '../content/lapas/sakums/problemas.json';
+import gaita from '../content/lapas/sakums/gaita.json';
+import pricing from '../content/lapas/sakums/cenas.json';
+import garantija from '../content/lapas/sakums/garantija.json';
+import sistemas from '../content/lapas/sakums/sistemas.json';
+import pieradijumi from '../content/lapas/sakums/pieradijumi.json';
+import kamnav from '../content/lapas/sakums/kamnav.json';
+import buj from '../content/lapas/sakums/buj.json';
+import nosleguma from '../content/lapas/sakums/nosleguma.json';
+import { price } from '../lib/price';
+import { hasContent, clean } from '../lib/empty';
+
+/**
+ * The offer page. Every word on it comes from src/content/lapas/sakums/*.json,
+ * which Keystatic edits at /keystatic — nothing here is hard-coded copy.
+ *
+ * Why the page is shaped the way it is:
+ *   · TWO entry tiers, not one. A single tier makes the first yes too expensive,
+ *     so there is a cheap door and a serious one.
+ *   · The deliverable is COUNTABLE. "Fifteen opportunities, top three prioritised"
+ *     can be checked; "we will look at your process" cannot.
+ *   · A three-step process, named in three words.
+ *   · A free, obligation-free call at the top of the funnel.
+ *   · No testimonials section. With no track record there is nothing honest to
+ *     put in one, so the risk-reversal block stands in its place — it is the only
+ *     trust signal available before the first client.
+ *
+ * The competitor research behind these choices is private; it is not repo content.
+ */
+const title = hero.virsraksts ? `${hero.virsraksts} — mai.lv` : 'mai.lv — MI risinājumi';
+const description = hero.apaksvirsraksts;
+
+// Emptied lists still arrive as arrays of blanks, so clean them once here and let
+// both the markup and the schema below work from the same cleaned copy.
+const painPoints = clean(problemas.punkti);
+const processSteps = clean(gaita.soli);
+const priceTiers = clean(pricing.limeni);
+const proofPoints = clean(pieradijumi.punkti);
+const notForPoints = clean(kamnav.punkti);
+const faqItems = clean(buj.jautajumi);
+
+// The FAQ is real content on the page, so declaring it as FAQPage is honest —
+// and it is the one schema type that can win extra surface in a result list.
+// Both entries are dropped when their section is empty: schema describing markup
+// that isn't there is a structured-data error, not just dead weight.
+const schema = [
+  faqItems.length > 0 && {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faqItems.map((j) => ({
+      '@type': 'Question',
+      name: j.jautajums,
+      acceptedAnswer: { '@type': 'Answer', text: j.atbilde },
+    })),
+  },
+  priceTiers.length > 0 && {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: 'Procesu automatizācija Zemgales uzņēmumiem',
+    serviceType: 'Biznesa procesu automatizācija',
+    provider: { '@type': 'Person', name: 'Mārtiņš Auseklis', url: 'https://mai.lv' },
+    areaServed: { '@type': 'AdministrativeArea', name: 'Jelgava, Jelgavas novads, Zemgale' },
+    offers: priceTiers.map((l) => ({
+      '@type': 'Offer',
+      name: l.nosaukums,
+      description: l.kam,
+      price: l.cena || undefined,
+      priceCurrency: 'EUR',
+    })),
+  },
+].filter(Boolean);
+---
+<Base title={title} description={description} schema={schema}>
+
+  {hasContent(hero.virsraksts, hero.apaksvirsraksts, hero.ctaTeksts, hero.mikroTeksts) && (
+    <section class="hero">
+      {hero.virsraksts && <h1>{hero.virsraksts}</h1>}
+      {hero.apaksvirsraksts && <p class="lead">{hero.apaksvirsraksts}</p>}
+      {hasContent(hero.ctaTeksts, hero.otraPogaTeksts) && (
+        <div class="pogas">
+          {hero.ctaTeksts && (
+            <a class="cta" href={hero.ctaSaite}
+               target={hero.ctaSaite?.startsWith('http') ? '_blank' : undefined}
+               rel={hero.ctaSaite?.startsWith('http') ? 'noopener' : undefined}>{hero.ctaTeksts}</a>
+          )}
+          {hero.otraPogaTeksts && (
+            <a class="cta ghost" href={hero.otraPogaSaite}>{hero.otraPogaTeksts}</a>
+          )}
+        </div>
+      )}
+      {hero.mikroTeksts && <p class="mikro">{hero.mikroTeksts}</p>}
+    </section>
+  )}
+
+  {hasContent(problemas.virsraksts, painPoints, problemas.ievads) && (
+    <section>
+      {problemas.virsraksts && <h2>{problemas.virsraksts}</h2>}
+      {painPoints.length > 0 && (
+        <ul class="sapes">
+          {painPoints.map((p) => <li>{p}</li>)}
+        </ul>
+      )}
+      {problemas.ievads && <p class="cap izsk">{problemas.ievads}</p>}
+    </section>
+  )}
+
+  {hasContent(gaita.virsraksts, processSteps) && (
+    <section>
+      {gaita.virsraksts && <h2>{gaita.virsraksts}</h2>}
+      {processSteps.length > 0 && (
+        <div class="soli">
+          {processSteps.map((s) => (
+            <article class="solis">
+              {s.nr && <div class="nr">{s.nr}</div>}
+              {s.nosaukums && <h3>{s.nosaukums}</h3>}
+              {s.apraksts && <p>{s.apraksts}</p>}
+            </article>
+          ))}
+        </div>
+      )}
+    </section>
+  )}
+
+  {hasContent(pricing.virsraksts, pricing.ievads, priceTiers, pricing.piezime) && (
+    <section id="cenas">
+      {pricing.virsraksts && <h2>{pricing.virsraksts}</h2>}
+      {pricing.ievads && <p class="ievads">{pricing.ievads}</p>}
+      {priceTiers.length > 0 && (
+        <div class="cenas">
+          {priceTiers.map((l) => (
+            <article class={`limenis${l.izcelt ? ' izcelts' : ''}`}>
+              <div class="lh">
+                {l.nosaukums && <h3>{l.nosaukums}</h3>}
+                <div class="price">{price(l.cena, l.cenasPrefikss)}<span>{l.ilgums}</span></div>
+              </div>
+              {l.kam && <p class="kam">{l.kam}</p>}
+              {clean(l.sanem).length > 0 && (
+                <ul>
+                  {clean(l.sanem).map((s) => <li>{s}</li>)}
+                </ul>
+              )}
+              {l.pogasTeksts && (
+                <a class="cta limena-poga" href={l.pogasSaite}
+                   target={l.pogasSaite?.startsWith('http') ? '_blank' : undefined}
+                   rel={l.pogasSaite?.startsWith('http') ? 'noopener' : undefined}>{l.pogasTeksts}</a>
+              )}
+            </article>
+          ))}
+        </div>
+      )}
+      {pricing.piezime && <p class="cap izsk">{pricing.piezime}</p>}
+    </section>
+  )}
+
+  {hasContent(garantija.virsraksts, garantija.teksts) && (
+    <section class="garantija">
+      {garantija.virsraksts && <h2>{garantija.virsraksts}</h2>}
+      {garantija.teksts && <p class="liels">{garantija.teksts}</p>}
+    </section>
+  )}
+
+  {hasContent(sistemas.ievads, sistemas.saraksts) && (
+    <section class="sistemas">
+      {sistemas.ievads && <p class="cap">{sistemas.ievads}</p>}
+      {sistemas.saraksts && <p class="saraksts">{sistemas.saraksts}</p>}
+    </section>
+  )}
+
+  {hasContent(pieradijumi.virsraksts, pieradijumi.ievads, proofPoints) && (
+    <section>
+      {pieradijumi.virsraksts && <h2>{pieradijumi.virsraksts}</h2>}
+      {pieradijumi.ievads && <p class="ievads">{pieradijumi.ievads}</p>}
+      {proofPoints.length > 0 && (
+        <ul class="saraksts-punkti">
+          {proofPoints.map((p) => <li>{p}</li>)}
+        </ul>
+      )}
+    </section>
+  )}
+
+  {hasContent(kamnav.virsraksts, notForPoints) && (
+    <section>
+      {kamnav.virsraksts && <h2>{kamnav.virsraksts}</h2>}
+      {notForPoints.length > 0 && (
+        <ul class="saraksts-punkti">
+          {notForPoints.map((p) => <li>{p}</li>)}
+        </ul>
+      )}
+    </section>
+  )}
+
+  {hasContent(buj.virsraksts, faqItems) && (
+    <section>
+      {buj.virsraksts && <h2>{buj.virsraksts}</h2>}
+      {faqItems.map((j) => (
+        <details>
+          <summary>{j.jautajums}</summary>
+          <p>{j.atbilde}</p>
+        </details>
+      ))}
+    </section>
+  )}
+
+  {hasContent(nosleguma.virsraksts, nosleguma.teksts, nosleguma.ctaTeksts) && (
+    <section class="beigas">
+      {nosleguma.virsraksts && <h2>{nosleguma.virsraksts}</h2>}
+      {nosleguma.teksts && <p class="lead maza">{nosleguma.teksts}</p>}
+      {nosleguma.ctaTeksts && <a class="cta" href={nosleguma.ctaSaite}>{nosleguma.ctaTeksts}</a>}
+    </section>
+  )}
+
+</Base>
+
+<style>
+  section{padding:clamp(52px,8vw,88px) 0;border-top:1px solid var(--line);text-align:center}
+  section:first-child{border-top:0;padding-top:clamp(36px,7vw,64px)}
+  h2{margin:0 auto 30px;max-width:22ch}
+
+  /* No character cap on the headline. A 15ch measure looks elegant with three
+     words and wastes half the column with ten — the phone column is the limit
+     that matters. Above 640px a cap comes back so the line does not run long. */
+  .hero h1{max-width:none;margin:0 auto 20px;text-wrap:balance;font-size:clamp(26px,6.4vw,48px)}
+  @media (min-width:640px){ .hero h1{max-width:19ch} }
+  .lead{font-size:clamp(16.5px,3.6vw,18.5px);color:var(--muted);max-width:48ch;
+    margin:0 auto 30px;line-height:1.6}
+  .lead.maza{font-size:16px;margin-bottom:26px}
+  .pogas{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+  .mikro{font-size:13px;color:var(--faint);margin:18px auto 0;max-width:44ch}
+  .ievads{color:var(--muted);font-size:15.5px;max-width:46ch;margin:-16px auto 30px}
+  .izsk{margin:20px auto 0;max-width:52ch}
+
+  ul.sapes{list-style:none;margin:0 auto;padding:0;display:grid;gap:1px;background:var(--line);
+    border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;
+    max-width:620px;text-align:left}
+  ul.sapes li{background:var(--surface);color:var(--muted);padding:16px 20px;font-size:15.5px}
+
+  .soli{display:grid;gap:14px;max-width:900px;margin:0 auto;text-align:left}
+  @media(min-width:760px){ .soli{grid-template-columns:repeat(3,1fr)} }
+  .solis{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:22px}
+  .nr{font-size:12px;color:var(--faint);letter-spacing:.09em;margin-bottom:14px}
+  .solis h3{color:var(--ink);margin-bottom:6px}
+  .solis p{color:var(--muted);font-size:14.5px;margin:0;line-height:1.6}
+
+  .cenas{display:grid;gap:14px;max-width:900px;margin:0 auto;text-align:left}
+  @media(min-width:720px){ .cenas{grid-template-columns:repeat(2,1fr)} }
+  .limenis{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);
+    padding:24px;transition:border-color var(--dur-base) var(--ease-out)}
+  .limenis:hover{border-color:var(--faint)}
+  .limenis.izcelts{border-color:var(--brand)}
+  .lh{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;margin-bottom:10px}
+  .price{font-family:var(--display);font-weight:700;font-size:22px;color:var(--ink);
+    text-align:right;white-space:nowrap;line-height:1.15}
+  .price span{display:block;font-family:var(--sans);font-weight:400;font-size:12px;
+    color:var(--faint);margin-top:3px}
+  .kam{color:var(--muted);font-size:14.5px;margin:0 0 14px}
+  .limenis ul{list-style:none;margin:0;padding:0;border-top:1px solid var(--line);padding-top:14px}
+  .limenis li{color:var(--muted);font-size:14px;line-height:1.5;padding:0 0 8px 18px;position:relative}
+  .limenis li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;
+    border-radius:var(--r-pill);background:var(--faint)}
+  .limenis.izcelts li::before{background:var(--brand)}
+  /* Sized to its label and centred in the card, rather than stretched full width —
+     the tier cards are left-aligned, so a full-bleed button reads as a bar. */
+  .limena-poga{display:block;width:fit-content;margin:20px auto 2px;
+    text-align:center;font-size:15px;padding:13px 22px}
+
+  .garantija .liels{font-size:clamp(16.5px,3.6vw,18px);color:var(--muted);max-width:50ch;
+    margin:0 auto;line-height:1.65}
+
+  .sistemas{padding-top:clamp(38px,6vw,56px);padding-bottom:clamp(38px,6vw,56px)}
+  .sistemas .saraksts{color:var(--muted);font-size:15px;margin:10px 0 0}
+
+  ul.saraksts-punkti{list-style:none;margin:0 auto;padding:0;max-width:var(--measure);text-align:left}
+  ul.saraksts-punkti li{color:var(--muted);font-size:15.5px;line-height:1.65;
+    padding:0 0 14px 20px;position:relative}
+  ul.saraksts-punkti li::before{content:"";position:absolute;left:0;top:9px;width:6px;height:6px;
+    border-radius:var(--r-pill);background:var(--faint)}
+
+  details{border-bottom:1px solid var(--line);padding:15px 0;max-width:var(--measure);
+    margin:0 auto;text-align:left}
+  summary{cursor:pointer;font-weight:600;color:var(--ink);font-size:15.5px;list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"+ ";color:var(--faint)}
+  details[open] summary::before{content:"– ";color:var(--brand)}
+  details p{margin:10px 0 0;font-size:15px;color:var(--muted)}
+
+  .beigas{padding-bottom:clamp(72px,11vw,112px)}
+</style>

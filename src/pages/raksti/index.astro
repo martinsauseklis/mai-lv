@@ -1,0 +1,91 @@
+---
+import Base from '../../layouts/Base.astro';
+import { allArticles, isPublished, formatDate, formatDateLocative } from '../../lib/articles';
+
+const raksti = await allArticles();
+
+/**
+ * Declare the archive as a Blog so an answer engine reads it as a body of work
+ * rather than a list of links, and can cite individual pieces.
+ *
+ * Only PUBLISHED pieces go in. A gated one has no page to point at — listing it
+ * would be structured data promising a URL that returns 404.
+ */
+const publicetie = raksti.filter(isPublished);
+const schema = publicetie.length
+  ? [{
+      '@context': 'https://schema.org',
+      '@type': 'Blog',
+      name: 'mai.lv raksti',
+      url: 'https://mai.lv/raksti/',
+      inLanguage: 'lv',
+      author: { '@type': 'Person', name: 'Mārtiņš Auseklis' },
+      blogPost: publicetie.map((r) => ({
+        '@type': 'BlogPosting',
+        headline: r.data.virsraksts,
+        description: r.data.kopsavilkums,
+        datePublished: r.data.publicetsTimekli.toISOString(),
+        url: `https://mai.lv/raksti/${r.id}/`,
+        author: { '@type': 'Person', name: 'Mārtiņš Auseklis' },
+      })),
+    }]
+  : [];
+---
+<Base
+  title="Raksti — mai.lv"
+  description="Vēstkopas arhīvs. Jaunākais raksts ir pieejams vēstkopas abonentiem, pēc tam parādās šeit."
+  schema={schema}
+>
+  <h1>Raksti</h1>
+  <p class="sub">
+    Jaunākais raksts ir pieejams vēstkopas abonentiem.
+  </p>
+
+  {raksti.length === 0 && <p class="cap">Pirmais raksts drīzumā.</p>}
+
+  <div class="arhivs">
+    {raksti.map((r) => {
+      const publisks = isPublished(r);
+      const Tag = publisks ? 'a' : 'div';
+      return (
+        <Tag class={`ieraksts${publisks ? '' : ' slegts'}`}
+             href={publisks ? `/raksti/${r.id}` : undefined}>
+          <div class="d">
+            {publisks ? formatDate(r.data.nosutits) : 'jaunākais'}
+            {!publisks && <span class="tag">tikai e-pastā</span>}
+          </div>
+          <div class="t">{r.data.virsraksts}</div>
+          <div class="s">
+            {publisks
+              ? r.data.kopsavilkums
+              : `Nosūtīts abonentiem. Šeit parādīsies ${formatDateLocative(r.data.publicetsTimekli)}.`}
+          </div>
+          {/* The gated entry is the one place on the site where someone wants
+              something they can't have, so the subscribe route belongs right
+              here — not in a banner they've already scrolled past. */}
+          {!publisks && <a class="cta abonet" href="/vestkopa">Abonēt un izlasīt</a>}
+        </Tag>
+      );
+    })}
+  </div>
+</Base>
+
+<style>
+  h1{margin-bottom:12px}
+  .sub{font-size:16.5px;color:var(--muted);max-width:50ch;margin-bottom:30px}
+  .arhivs{max-width:var(--measure)}
+  .ieraksts{display:block;text-decoration:none;color:inherit;padding:16px 0;
+    border-bottom:1px solid var(--line)}
+  .ieraksts:last-child{border-bottom:0}
+  a.ieraksts:hover .t{color:var(--accent)}
+  .d{font-size:12.5px;color:var(--faint)}
+  .t{font-family:var(--display);font-weight:600;font-size:18px;color:var(--ink);
+    margin:4px 0 3px;line-height:1.3;transition:color var(--dur-fast) var(--ease-out)}
+  .slegts .t{color:var(--muted)}
+  .s{font-size:14.5px;color:var(--muted);line-height:1.5}
+  .tag{display:inline-block;font-size:10.5px;background:var(--ink);color:var(--bg);
+    padding:2px 7px;border-radius:var(--r-sm);margin-left:8px;vertical-align:1px}
+  /* Smaller than the page's main CTA on purpose — it sits inside a list row and
+     should read as the next step, not compete with the offer page. */
+  .abonet{font-size:14px;padding:9px 16px;margin-top:12px}
+</style>
