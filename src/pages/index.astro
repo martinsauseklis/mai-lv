@@ -1,6 +1,8 @@
 ---
 import Base from '../layouts/Base.astro';
+import SignupForm from '../components/SignupForm.astro';
 import hero from '../content/lapas/sakums/hero.json';
+import kopigi from '../content/lapas/kopigi.json';
 import problemas from '../content/lapas/sakums/problemas.json';
 import gaita from '../content/lapas/sakums/gaita.json';
 import pricing from '../content/lapas/sakums/cenas.json';
@@ -12,26 +14,28 @@ import buj from '../content/lapas/sakums/buj.json';
 import nosleguma from '../content/lapas/sakums/nosleguma.json';
 import { price } from '../lib/price';
 import { hasContent, clean } from '../lib/empty';
+import { publicArticles, formatDate } from '../lib/articles';
 
 /**
- * The offer page. Every word on it comes from src/content/lapas/sakums/*.json,
- * which Keystatic edits at /keystatic — nothing here is hard-coded copy.
+ * The home page. Its one job is the newsletter signup: the hero says what this
+ * is, the form sits directly under it, and the latest articles are the proof
+ * that something arrives if you sign up.
  *
- * Why the page is shaped the way it is:
- *   · TWO entry tiers, not one. A single tier makes the first yes too expensive,
- *     so there is a cheap door and a serious one.
- *   · The deliverable is COUNTABLE. "Fifteen opportunities, top three prioritised"
- *     can be checked; "we will look at your process" cannot.
- *   · A three-step process, named in three words.
- *   · A free, obligation-free call at the top of the funnel.
- *   · No testimonials section. With no track record there is nothing honest to
- *     put in one, so the risk-reversal block stands in its place — it is the only
- *     trust signal available before the first client.
+ * Every word comes from src/content/lapas/sakums/*.json, which Keystatic edits
+ * at /keystatic — nothing here is hard-coded copy.
  *
- * The competitor research behind these choices is private; it is not repo content.
+ * The ten section blocks below are the old offer page. They are kept, not
+ * deleted: their JSON is empty, and the hasContent() guard makes an empty
+ * section disappear from the page entirely — so the markup costs nothing and
+ * refilling a section in Keystatic brings it back. Same for the Service/Offer
+ * schema, which is guarded on the price tiers being non-empty.
  */
 const title = hero.virsraksts ? `${hero.virsraksts} — mai.lv` : 'mai.lv — MI risinājumi';
 const description = hero.apaksvirsraksts;
+
+// Three on desktop, one on the phone. All three are rendered and CSS hides the
+// last two below the breakpoint — no layout shift, and it works with JS off.
+const latestArticles = (await publicArticles()).slice(0, 3);
 
 // Emptied lists still arrive as arrays of blanks, so clean them once here and let
 // both the markup and the schema below work from the same cleaned copy.
@@ -94,6 +98,11 @@ const schema = [
       {hero.mikroTeksts && <p class="mikro">{hero.mikroTeksts}</p>}
     </section>
   )}
+
+  {/* Directly under the hero, and never guarded — the signup is the page. */}
+  <section class="signup-block">
+    <SignupForm center />
+  </section>
 
   {hasContent(problemas.virsraksts, painPoints, problemas.ievads) && (
     <section>
@@ -212,6 +221,23 @@ const schema = [
     </section>
   )}
 
+  {/* No articles yet, so the section is left out rather than filled with a
+      placeholder — the same way every other empty section behaves here. */}
+  {latestArticles.length > 0 && (
+    <section class="latest">
+      <h2>{kopigi.navRaksti}</h2>
+      <div class="latest-list">
+        {latestArticles.map((r) => (
+          <a class="latest-item" href={`/raksti/${r.id}`}>
+            <div class="d">{formatDate(r.data.nosutits)}</div>
+            <div class="t">{r.data.virsraksts}</div>
+            <div class="s">{r.data.kopsavilkums}</div>
+          </a>
+        ))}
+      </div>
+    </section>
+  )}
+
 </Base>
 
 <style>
@@ -287,4 +313,27 @@ const schema = [
   details p{margin:10px 0 0;font-size:15px;color:var(--muted)}
 
   .beigas{padding-bottom:clamp(72px,11vw,112px)}
+
+  /* The form belongs to the hero: no hairline, and the two share one block of
+     vertical space instead of each padding away from the other. */
+  section.hero{padding-bottom:0}
+  section.signup-block{border-top:0;padding-top:0}
+
+  .latest h2{margin-bottom:24px}
+  .latest-list{display:grid;gap:14px;max-width:900px;margin:0 auto;text-align:left}
+  .latest-item{display:block;text-decoration:none;color:inherit;padding:22px;
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);
+    transition:border-color var(--dur-base) var(--ease-out)}
+  .latest-item:hover{border-color:var(--faint)}
+  .latest-item .d{font-size:12.5px;color:var(--faint)}
+  .latest-item .t{font-family:var(--display);font-weight:600;font-size:18px;color:var(--ink);
+    margin:4px 0 3px;line-height:1.3}
+  .latest-item .s{font-size:14.5px;color:var(--muted);line-height:1.5}
+  /* One on the phone, three from 760px up. All three are in the HTML and CSS
+     hides the last two, so there is no layout shift and no JavaScript. */
+  .latest-item:nth-child(n+2){display:none}
+  @media(min-width:760px){
+    .latest-list{grid-template-columns:repeat(3,1fr)}
+    .latest-item:nth-child(n+2){display:block}
+  }
 </style>

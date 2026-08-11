@@ -38,11 +38,10 @@ Dati var tikt apstrādāti tikai tādā apjomā, kāds nepieciešams pakalpojumu
 - vēstkopas nosūtīšanu (EmailOctopus);
 - vietnes mitināšanu (GitHub Pages);
 - aizsardzību pret automatizētiem pieprasījumiem ([Google reCAPTCHA](https://policies.google.com/privacy));
-- konsultāciju pieteikšanu ([Cal.com, Inc.](https://cal.com/privacy), ASV);
 - saziņas formas saņemšanu ([Web3Forms](https://web3forms.com/privacy), ASV);
 - e-pasta uzturēšanu ([Hostinger](https://www.hostinger.com/legal/privacy-policy), ES).
 
-Vēstkopas adresātu saraksts tiek glabāts Eiropas Ekonomikas zonā — Īrijā. **Konsultāciju pieteikumi un saziņas formas ziņas tiek apstrādāti Amerikas Savienotajās Valstīs** — pieteikumi Cal.com, Inc. serveros, bet formas ziņas Web3Forms serveros, no kurienes tās tiek pārsūtītas uz manu e-pastu un dzēstas pēc 30 dienām.
+Vēstkopas adresātu saraksts tiek glabāts Eiropas Ekonomikas zonā — Īrijā. **Saziņas formas ziņas tiek apstrādātas Amerikas Savienotajās Valstīs** — Web3Forms serveros, no kurienes tās tiek pārsūtītas uz manu e-pastu un dzēstas pēc 30 dienām.
 
 Ja personas dati tiek nodoti ārpus Eiropas Ekonomikas zonas, tas notiek saskaņā ar piemērojamo datu aizsardzības regulējumu.
 

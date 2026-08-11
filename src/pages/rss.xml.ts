@@ -7,7 +7,7 @@ export async function GET(context: APIContext) {
   const raksti = await publicArticles();
   return rss({
     title: 'mai.lv',
-    description: 'MI risinājumi, kas palīdzēs atgūt Jūsu laiku.',
+    description: 'MI risinājumi, kas palīdzēs atgūt tavu laiku.',
     site: context.site!,
     items: raksti.map((r) => ({
       title: r.data.virsraksts,
