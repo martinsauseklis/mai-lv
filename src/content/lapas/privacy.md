@@ -15,7 +15,6 @@ E-pasts
 ## Kādus datus apstrādāju
 
 - **E-pasta adresi**, kas nepieciešama vēstkopas nosūtīšanai.
-- **Uzņēmuma nosaukumu**, ja tas ir norādīts pieteikšanās laikā.
 - **Tehnisko informāciju**, piemēram, pieteikšanās datumu, laiku un IP adresi, lai dokumentētu piekrišanu.
 - **Vēstkopas statistiku**, piemēram, informāciju par piegādi, atvēršanu, izmantotajām saitēm un atrakstīšanos, lai izvērtētu vēstkopas darbību. Atvēršana tiek fiksēta ar neredzamu attēlu vēstulē.
 
