@@ -249,7 +249,13 @@ export default config({
         kopsavilkums: rinda('Kopsavilkums'),
         // isRequired, because the build schema demands a date and Keystatic
         // would otherwise happily save a file that then fails the build.
-        datums: fields.date({ label: 'Datums', validation: { isRequired: true } }),
+        datums: fields.date({
+          label: 'Datums',
+          // Defaults to today, because an article is almost always written the
+          // day it's dated and the picker is a long way from the keyboard.
+          defaultValue: { kind: 'now' },
+          validation: { isRequired: true },
+        }),
         // extension: 'md' — Keystatic defaults to .mdoc, which Astro cannot
         // render without @astrojs/markdoc. Without this every article created
         // here is written to a file the site silently ignores.
