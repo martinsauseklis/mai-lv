@@ -1,6 +1,6 @@
 ---
 heading: Privātuma politika
-effectiveFrom: Spēkā no 2026. gada 6. augusta
+effectiveFrom: Spēkā no 2026. gada 11. augusta
 ---
 Šajā privātuma politikā ir aprakstīts, kā mai.lv apstrādā personas datus, piesakoties vēstkopai.
 
@@ -37,6 +37,7 @@ Dati var tikt apstrādāti tikai tādā apjomā, kāds nepieciešams pakalpojumu
 - vēstkopas nosūtīšanu (EmailOctopus);
 - vietnes mitināšanu (GitHub Pages);
 - aizsardzību pret automatizētiem pieprasījumiem ([Google reCAPTCHA](https://policies.google.com/privacy));
+- aizsardzību pret automatizētiem pieprasījumiem saziņas formā ([hCaptcha](https://www.hcaptcha.com/privacy), Intuition Machines, Inc., ASV);
 - saziņas formas saņemšanu ([Web3Forms](https://web3forms.com/privacy), ASV);
 - e-pasta uzturēšanu ([Hostinger](https://www.hostinger.com/legal/privacy-policy), ES).
 
