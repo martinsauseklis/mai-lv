@@ -24,10 +24,7 @@ export default config({
   ui: {
     brand: { name: 'mai.lv' },
     navigation: {
-      Sākumlapa: [
-        'hero', 'problemas', 'gaita', 'cenas', 'garantija',
-        'sistemas', 'pieradijumi', 'kamnav', 'buj', 'nosleguma',
-      ],
+      Sākumlapa: ['hero'],
       'Pārējās lapas': ['privacy', 'kopigi'],
       Saturs: ['raksti'],
     },
@@ -41,145 +38,17 @@ export default config({
       schema: {
         virsraksts: teksts('Virsraksts'),
         apaksvirsraksts: rinda('Apakšvirsraksts'),
-        ctaTeksts: teksts('Pogas teksts'),
-        ctaSaite: teksts('Pogas saite'),
-        otraPogaTeksts: teksts('Otrās pogas teksts'),
-        otraPogaSaite: teksts('Otrās pogas saite'),
-        mikroTeksts: rinda('Sīkais teksts zem pogas'),
       },
     }),
 
-    problemas: singleton({
-      label: '2 · Problēmu uzskaite',
-      path: 'src/content/lapas/sakums/problemas',
-      format: { data: 'json' },
-      schema: {
-        virsraksts,
-        ievads: rinda('Noslēdzošais teikums'),
-        punkti: fields.array(rinda('Problēma'), {
-          label: 'Problēmas', itemLabel: (p) => p.value.slice(0, 70),
-        }),
-      },
-    }),
 
-    gaita: singleton({
-      label: '3 · Darba gaita',
-      path: 'src/content/lapas/sakums/gaita',
-      format: { data: 'json' },
-      schema: {
-        virsraksts,
-        soli: fields.array(
-          fields.object({
-            nr: teksts('Numurs'),
-            nosaukums: teksts('Nosaukums'),
-            apraksts: rinda('Apraksts'),
-          }),
-          { label: 'Soļi', itemLabel: (p) => `${p.fields.nr.value} · ${p.fields.nosaukums.value}` },
-        ),
-      },
-    }),
 
-    cenas: singleton({
-      label: '4 · Cenas',
-      path: 'src/content/lapas/sakums/cenas',
-      format: { data: 'json' },
-      schema: {
-        virsraksts,
-        ievads: rinda('Ievads'),
-        piezime: rinda('Piezīme zem cenām'),
-        limeni: fields.array(
-          fields.object({
-            nosaukums: teksts('Nosaukums'),
-            cena: fields.integer({
-              label: 'Cena',
-              description: 'Tikai skaitlis. Eiro zīmi un atstarpi pieliek lapa pati.',
-              validation: { min: 0 },
-            }),
-            cenasPrefikss: fields.select({
-              label: 'Priekšā',
-              options: [
-                { label: '(nekas)', value: '' },
-                { label: 'no', value: 'no' },
-              ],
-              defaultValue: '',
-            }),
-            ilgums: teksts('Zem cenas (ilgums vai periods)'),
-            kam: rinda('Kam tas ir'),
-            izcelt: fields.checkbox({ label: 'Izcelt', defaultValue: false }),
-            pogasTeksts: teksts('Pogas teksts (tukšs = bez pogas)'),
-            pogasSaite: teksts('Pogas saite'),
-            sanem: fields.array(teksts('Punkts'), {
-              label: 'Ko saņem', itemLabel: (p) => p.value.slice(0, 60),
-            }),
-          }),
-          { label: 'Līmeņi', itemLabel: (p) => `${p.fields.nosaukums.value} — €${p.fields.cena.value ?? ''}` },
-        ),
-      },
-    }),
 
-    garantija: singleton({
-      label: '5 · Garantija',
-      path: 'src/content/lapas/sakums/garantija',
-      format: { data: 'json' },
-      schema: { virsraksts, teksts: rinda('Teksts') },
-    }),
 
-    sistemas: singleton({
-      label: '6 · Sistēmu josla',
-      path: 'src/content/lapas/sakums/sistemas',
-      format: { data: 'json' },
-      schema: { ievads: teksts('Ievads'), saraksts: teksts('Sistēmas') },
-    }),
 
-    pieradijumi: singleton({
-      label: '7 · Pierādījumi',
-      path: 'src/content/lapas/sakums/pieradijumi',
-      format: { data: 'json' },
-      schema: {
-        virsraksts,
-        ievads: rinda('Ievads'),
-        punkti: fields.array(rinda('Punkts'), {
-          label: 'Punkti', itemLabel: (p) => p.value.slice(0, 70),
-        }),
-      },
-    }),
 
-    kamnav: singleton({
-      label: '8 · Kam nav domāts',
-      path: 'src/content/lapas/sakums/kamnav',
-      format: { data: 'json' },
-      schema: {
-        virsraksts,
-        punkti: fields.array(rinda('Punkts'), {
-          label: 'Punkti', itemLabel: (p) => p.value.slice(0, 70),
-        }),
-      },
-    }),
 
-    buj: singleton({
-      label: '9 · Jautājumi un atbildes',
-      path: 'src/content/lapas/sakums/buj',
-      format: { data: 'json' },
-      schema: {
-        virsraksts,
-        jautajumi: fields.array(
-          fields.object({ jautajums: teksts('Jautājums'), atbilde: rinda('Atbilde') }),
-          { label: 'Jautājumi', itemLabel: (p) => p.fields.jautajums.value },
-        ),
-      },
-    }),
 
-    nosleguma: singleton({
-      label: '10 · Noslēgums',
-      path: 'src/content/lapas/sakums/nosleguma',
-      format: { data: 'json' },
-      schema: {
-        virsraksts,
-        teksts: rinda('Teksts'),
-        ctaTeksts: teksts('Pogas teksts'),
-        ctaSaite: teksts('Pogas saite'),
-      },
-    }),
 
 
     /**
