@@ -105,5 +105,7 @@ const { center = false } = Astro.props;
      and the page around it needs no knowledge of the embed. */
   .signup{max-width:400px}
   .signup.is-center{margin-inline:auto;text-align:left}
-  .signup .signup-fine{font-size:12.5px;color:var(--faint);margin:12px 0 0}
+  /* Centred under the form rather than ranged left against it — it's a footnote
+     to the whole block, not to the last field. */
+  .signup .signup-fine{font-size:12.5px;color:var(--faint);margin:12px 0 0;text-align:center}
 </style>
