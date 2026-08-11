@@ -1,18 +1,17 @@
 ---
 /**
- * The EmailOctopus signup — the site's one conversion point, so it lives in one
- * file and both the home page and /vestkopa render this same component. The
- * styling below is hard-won against their embed; there must not be a second copy
- * of it to keep in sync.
+ * The EmailOctopus signup — the site's one conversion point. It lives in one
+ * file because the styling below is hard-won against their embed and there must
+ * not be a second copy to keep in sync.
  *
- * The fine print comes from the vestkopa singleton, so it stays editable in
- * Keystatic ("Vēstkopas lapa" → "Sīkais teksts zem formas") and reads the same
- * wherever the form appears.
+ * The fine print sits in the shared chrome file rather than a page of its own:
+ * the signup used to have a dedicated /vestkopa page, and now the home page does
+ * that job. Still editable in Keystatic under "Izvēlne un kājene".
  */
-import vestkopa from '../content/lapas/vestkopa.json';
+import kopigi from '../content/lapas/kopigi.json';
 
 interface Props {
-  /** Centre the form in its column — the home page is centred, /vestkopa is not. */
+  /** Centre the form in its column. */
   center?: boolean;
 }
 const { center = false } = Astro.props;
@@ -22,7 +21,7 @@ const { center = false } = Astro.props;
     async
     src="https://eocampaign1.com/form/dae5ac3e-90b7-11f1-855d-fdd3d718a2cb.js"
     data-form="dae5ac3e-90b7-11f1-855d-fdd3d718a2cb"></script>
-  {vestkopa.smalkais && <p class="signup-fine">{vestkopa.smalkais}</p>}
+  {kopigi.vestkopaSmalkais && <p class="signup-fine">{kopigi.vestkopaSmalkais}</p>}
 </div>
 
 <style is:global>

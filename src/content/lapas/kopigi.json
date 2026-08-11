@@ -1,6 +1,5 @@
 {
   "vardzime": "mai.lv",
-  "navVestkopa": "Vēstkopa",
   "navRaksti": "Raksti",
   "kajene": "© 2026 mai.lv",
   "privatumsSaite": "Privātuma politika",
@@ -10,5 +9,6 @@
   "formaEpastaLauks": "Tavs e-pasts",
   "formaZinasLauks": "Ziņa",
   "formaPoga": "Sūtīt",
-  "formaPeciesuti": "Paldies, ziņa ir saņemta!"
+  "formaPeciesuti": "Paldies, ziņa ir saņemta!",
+  "vestkopaSmalkais": "Atrakstīties vari jebkurā vēstulē ar vienu klikšķi."
 }

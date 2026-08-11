@@ -28,7 +28,7 @@ export default config({
         'hero', 'problemas', 'gaita', 'cenas', 'garantija',
         'sistemas', 'pieradijumi', 'kamnav', 'buj', 'nosleguma',
       ],
-      'Pārējās lapas': ['vestkopa', 'privacy', 'kopigi'],
+      'Pārējās lapas': ['privacy', 'kopigi'],
       Saturs: ['raksti'],
     },
   },
@@ -181,17 +181,6 @@ export default config({
       },
     }),
 
-    vestkopa: singleton({
-      label: 'Vēstkopas lapa',
-      path: 'src/content/lapas/vestkopa',
-      format: { data: 'json' },
-      schema: {
-        virsraksts: teksts('Virsraksts'),
-        apaksvirsraksts: rinda('Apakšvirsraksts'),
-        smalkais: rinda('Sīkais teksts zem formas'),
-        arhivaSaite: teksts('Teksts pie arhīva saites'),
-      },
-    }),
 
     /**
      * The privacy policy is one long piece of prose, not a set of slots, so it
@@ -225,7 +214,6 @@ export default config({
       format: { data: 'json' },
       schema: {
         vardzime: teksts('Vārdzīme'),
-        navVestkopa: teksts('Izvēlne — vēstkopa'),
         navRaksti: teksts('Izvēlne — raksti'),
         kajene: teksts('Kājene'),
         privatumsSaite: teksts('Privātuma saites teksts'),
@@ -244,6 +232,7 @@ export default config({
         formaZinasLauks: teksts('Ziņas lauka nosaukums'),
         formaPoga: teksts('Formas pogas teksts'),
         formaPeciesuti: rinda('Teksts pēc nosūtīšanas'),
+        vestkopaSmalkais: rinda('Sīkais teksts zem vēstkopas formas'),
       },
     }),
   },
