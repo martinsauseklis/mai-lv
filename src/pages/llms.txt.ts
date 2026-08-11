@@ -1,5 +1,5 @@
 import type { APIContext } from 'astro';
-import { publicArticles } from '../lib/articles';
+import { allArticles } from '../lib/articles';
 import hero from '../content/lapas/sakums/hero.json';
 import pricing from '../content/lapas/sakums/cenas.json';
 import kamnav from '../content/lapas/sakums/kamnav.json';
@@ -16,7 +16,7 @@ import { clean, hasContent } from '../lib/empty';
  */
 export async function GET(context: APIContext) {
   const site = context.site!.href.replace(/\/$/, '');
-  const raksti = await publicArticles();
+  const raksti = await allArticles();
 
   // Sections clear out in Keystatic, and a missing field interpolates as the
   // literal string "undefined" — which is worse than saying nothing, because an

@@ -14,7 +14,7 @@ import buj from '../content/lapas/sakums/buj.json';
 import nosleguma from '../content/lapas/sakums/nosleguma.json';
 import { price } from '../lib/price';
 import { hasContent, clean } from '../lib/empty';
-import { publicArticles, formatDate } from '../lib/articles';
+import { allArticles, formatDate } from '../lib/articles';
 
 /**
  * The home page. Its one job is the newsletter signup: the hero says what this
@@ -35,7 +35,7 @@ const description = hero.apaksvirsraksts;
 
 // Three on desktop, one on the phone. All three are rendered and CSS hides the
 // last two below the breakpoint — no layout shift, and it works with JS off.
-const latestArticles = (await publicArticles()).slice(0, 3);
+const latestArticles = (await allArticles()).slice(0, 3);
 
 // Emptied lists still arrive as arrays of blanks, so clean them once here and let
 // both the markup and the schema below work from the same cleaned copy.
@@ -229,7 +229,7 @@ const schema = [
       <div class="latest-list">
         {latestArticles.map((r) => (
           <a class="latest-item" href={`/raksti/${r.id}`}>
-            <div class="d">{formatDate(r.data.nosutits)}</div>
+            <div class="d">{formatDate(r.data.datums)}</div>
             <div class="t">{r.data.virsraksts}</div>
             <div class="s">{r.data.kopsavilkums}</div>
           </a>

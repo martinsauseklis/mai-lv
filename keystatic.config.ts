@@ -214,6 +214,7 @@ export default config({
       format: { data: 'json' },
       schema: {
         vardzime: teksts('Vārdzīme'),
+        navSakums: teksts('Izvēlne — sākums'),
         navRaksti: teksts('Izvēlne — raksti'),
         kajene: teksts('Kājene'),
         privatumsSaite: teksts('Privātuma saites teksts'),
@@ -246,23 +247,13 @@ export default config({
       schema: {
         virsraksts: fields.slug({ name: { label: 'Virsraksts' } }),
         kopsavilkums: rinda('Kopsavilkums'),
-        nosutits: fields.date({ label: 'Nosūtīts abonentiem' }),
-        publicetsTimekli: fields.date({
-          label: 'Publiskots lapā',
-          description: 'Līdz šim datumam raksts sarakstā ir redzams, bet nav atverams.',
-        }),
-        nozare: fields.select({
-          label: 'Nozare',
-          options: [
-            { label: '—', value: 'nav' },
-            { label: 'Pārvadājumi', value: 'parvadajumi' },
-            { label: 'Vairumtirdzniecība', value: 'vairumtirdznieciba' },
-            { label: 'Būvniecība', value: 'buvnieciba' },
-            { label: 'Mazumtirdzniecība', value: 'mazumtirdznieciba' },
-          ],
-          defaultValue: 'nav',
-        }),
-        saturs: fields.markdoc({ label: 'Saturs' }),
+        // isRequired, because the build schema demands a date and Keystatic
+        // would otherwise happily save a file that then fails the build.
+        datums: fields.date({ label: 'Datums', validation: { isRequired: true } }),
+        // extension: 'md' — Keystatic defaults to .mdoc, which Astro cannot
+        // render without @astrojs/markdoc. Without this every article created
+        // here is written to a file the site silently ignores.
+        saturs: fields.markdoc({ label: 'Saturs', extension: 'md' }),
       },
     }),
   },

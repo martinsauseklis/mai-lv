@@ -8,13 +8,6 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
-  # THE TIME GATE NEEDS THIS. A piece is public only once its publicetsTimekli
-  # date has passed, and that comparison happens at BUILD time — not when a
-  # visitor asks for the page. Without a scheduled rebuild, a piece dated for
-  # next Thursday would simply never appear unless something else happened to
-  # trigger a deploy that day. 05:10 UTC daily.
-  schedule:
-    - cron: '10 5 * * *'
 
 permissions:
   contents: read

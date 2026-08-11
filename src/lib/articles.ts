@@ -2,30 +2,24 @@ import { getCollection, type CollectionEntry } from 'astro:content';
 
 export type Article = CollectionEntry<'raksti'>;
 
-/** Everything, newest first — includes pieces still inside the gate. */
+/**
+ * Every article, newest first.
+ *
+ * There used to be a seven-day gate here — a piece went to subscribers first and
+ * appeared on the site a week later. That's gone: the list is for product
+ * access now, not for early sight of writing, so an article is simply published
+ * or not written yet. The daily rebuild cron existed only to open the gate and
+ * went with it.
+ */
 export async function allArticles(): Promise<Article[]> {
   const all = await getCollection('raksti');
-  return all.sort((a, b) => b.data.nosutits.valueOf() - a.data.nosutits.valueOf());
+  return all.sort((a, b) => b.data.datums.valueOf() - a.data.datums.valueOf());
 }
 
-/** Public only. This is what decides whether a page is generated at all. */
-export async function publicArticles(): Promise<Article[]> {
-  const today = new Date();
-  return (await allArticles()).filter((r) => r.data.publicetsTimekli <= today);
-}
-
-export function isPublished(r: Article, now = new Date()): boolean {
-  return r.data.publicetsTimekli <= now;
-}
-
-const MONTHS_LOCATIVE = [
-  'janvārī', 'februārī', 'martā', 'aprīlī', 'maijā', 'jūnijā',
-  'jūlijā', 'augustā', 'septembrī', 'oktobrī', 'novembrī', 'decembrī',
-];
 const MONTHS_NOMINATIVE = [
   'janvāris', 'februāris', 'marts', 'aprīlis', 'maijs', 'jūnijs',
   'jūlijs', 'augusts', 'septembris', 'oktobris', 'novembris', 'decembris',
 ];
 
+/** `IntlDateFormatter` can't produce these, and `strftime` is gone in PHP-land — keep the table. */
 export const formatDate = (d: Date) => `${d.getDate()}. ${MONTHS_NOMINATIVE[d.getMonth()]}`;
-export const formatDateLocative = (d: Date) => `${d.getDate()}. ${MONTHS_LOCATIVE[d.getMonth()]}`;

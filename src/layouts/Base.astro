@@ -23,6 +23,7 @@ const {
   ogType = 'website', publishedTime, section,
 } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
+const onArticles = Astro.url.pathname.startsWith('/raksti');
 const ogImage = new URL('/og.png', Astro.site).href;
 
 const baseGraph = [
@@ -86,8 +87,12 @@ const baseGraph = [
   <div class="page">
     <header class="top">
       <a class="wm" href="/">{kopigi.vardzime}</a>
+      {/* Two pages, so the nav only ever needs to offer the other one. On the
+          articles page that's home; everywhere else it's the articles. */}
       <nav>
-        <a href="/raksti">{kopigi.navRaksti}</a>
+        {onArticles
+          ? <a href="/">{kopigi.navSakums}</a>
+          : <a href="/raksti">{kopigi.navRaksti}</a>}
       </nav>
     </header>
 

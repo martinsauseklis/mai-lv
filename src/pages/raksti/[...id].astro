@@ -1,11 +1,11 @@
 ---
 import Base from '../../layouts/Base.astro';
-import { publicArticles, formatDate } from '../../lib/articles';
+import { allArticles, formatDate } from '../../lib/articles';
 import { render } from 'astro:content';
 
 // Only public pieces get a page. Inside the gate there is no file to find.
 export async function getStaticPaths() {
-  const raksti = await publicArticles();
+  const raksti = await allArticles();
   return raksti.map((r) => ({ params: { id: r.id }, props: { raksts: r } }));
 }
 
@@ -14,29 +14,18 @@ const { Content } = await render(raksts);
 
 const url = new URL(`/raksti/${raksts.id}/`, Astro.site).href;
 
-// NOZARE maps the sector tag onto something a search engine understands as a topic.
-const NOZARE: Record<string, string> = {
-  parvadajumi: 'Pārvadājumi',
-  vairumtirdznieciba: 'Vairumtirdzniecība',
-  buvnieciba: 'Būvniecība',
-  mazumtirdznieciba: 'Mazumtirdzniecība',
-  nav: '',
-};
-const sadala = NOZARE[raksts.data.nozare] || undefined;
-
 const schema = [
   {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: raksts.data.virsraksts,
     description: raksts.data.kopsavilkums,
-    datePublished: raksts.data.publicetsTimekli.toISOString(),
-    dateModified: raksts.data.publicetsTimekli.toISOString(),
+    datePublished: raksts.data.datums.toISOString(),
+    dateModified: raksts.data.datums.toISOString(),
     inLanguage: 'lv',
     url,
     mainEntityOfPage: { '@type': 'WebPage', '@id': url },
     image: new URL('/og.png', Astro.site).href,
-    ...(sadala ? { articleSection: sadala } : {}),
     author: { '@type': 'Person', name: 'Mārtiņš Auseklis', url: 'https://mai.lv' },
     publisher: { '@type': 'Person', name: 'Mārtiņš Auseklis', url: 'https://mai.lv' },
   },
@@ -56,12 +45,11 @@ const schema = [
   description={raksts.data.kopsavilkums}
   schema={schema}
   ogType="article"
-  publishedTime={raksts.data.publicetsTimekli}
-  section={sadala}
+  publishedTime={raksts.data.datums}
 >
   <article>
     <h1>{raksts.data.virsraksts}</h1>
-    <p class="formatDate">{formatDate(raksts.data.nosutits)}</p>
+    <p class="formatDate">{formatDate(raksts.data.datums)}</p>
     <div class="proza"><Content /></div>
   </article>
   <p class="atpakal"><a href="/raksti">← Visi raksti</a></p>
