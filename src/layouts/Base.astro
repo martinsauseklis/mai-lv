@@ -139,6 +139,13 @@ const baseGraph = [
               <textarea name="message" rows="4" required></textarea>
             </label>
 
+            {/* hCaptcha, enabled for this key in the Web3Forms dashboard. Their
+                client script turns this div into the widget and injects the
+                sitekey, so there is none to hardcode. It writes the token into
+                a textarea named h-captcha-response inside the form, which the
+                FormData below picks up without us naming it. */}
+            <div class="h-captcha" data-captcha="true" data-theme="dark"></div>
+
             <button type="submit" class="cta">{kopigi.formaPoga}</button>
             <p class="statuss" data-statuss role="status" aria-live="polite"></p>
           </form>
@@ -146,6 +153,10 @@ const baseGraph = [
           {/* Not a link — the privacy policy sits in the footer directly below,
               so a second link to it a few pixels away is just noise. */}
           <p class="smalkais">Nosūtot, tu piekrīti privātuma politikai.</p>
+
+          {/* Loaded only where the form is. is:inline keeps Astro from bundling
+              a third-party script it does not control. */}
+          <script is:inline async defer src="https://web3forms.com/client/script.js"></script>
         </section>
       )}
 
@@ -206,6 +217,13 @@ const baseGraph = [
   .forma[data-nosutits] .statuss{color:var(--ink);font-size:15px}
 
   .sazina .smalkais{font-size:12px;color:var(--faint);margin:12px 0 0}
+
+  /* The widget is a fixed-width iframe hCaptcha injects, so it can neither be
+     restyled nor allowed to set the column width — centre it and let it shrink
+     on a narrow phone rather than pushing the page sideways. The min-height
+     reserves its space so the button does not jump when it finishes loading. */
+  .h-captcha{display:flex;justify-content:center;min-height:78px}
+  .h-captcha :global(iframe){max-width:100%}
 </style>
 
 <script>
@@ -214,12 +232,29 @@ const baseGraph = [
   // JavaScript off none of this runs and the ordinary submit still works.
   const forma = document.querySelector<HTMLFormElement>('form[data-sazina]');
 
+  // hCaptcha's own API, loaded by the Web3Forms script. Only reset() is needed:
+  // a token is single-use, so after a failed send the widget must be cleared or
+  // the retry submits a token the server has already spent.
+  const hcaptcha = () =>
+    (window as unknown as { hcaptcha?: { reset(): void } }).hcaptcha;
+
   forma?.addEventListener('submit', async (notikums) => {
     notikums.preventDefault();
 
     const poga = forma.querySelector<HTMLButtonElement>('button[type=submit]');
     const statuss = forma.querySelector<HTMLParagraphElement>('[data-statuss]');
     if (!poga || !statuss) return;
+
+    // Web3Forms rejects a submission with no token, so stop here and say why
+    // rather than letting it fail as a generic network error.
+    const talons = forma.querySelector<HTMLTextAreaElement>(
+      'textarea[name=h-captcha-response]',
+    );
+    if (!talons?.value) {
+      statuss.dataset.kluda = '';
+      statuss.textContent = 'Lūdzu, apstiprini, ka neesi robots.';
+      return;
+    }
 
     const sakotnejais = poga.textContent;
     poga.disabled = true;
@@ -243,6 +278,7 @@ const baseGraph = [
     } catch {
       poga.disabled = false;
       poga.textContent = sakotnejais;
+      hcaptcha()?.reset();
       statuss.dataset.kluda = '';
       statuss.textContent = 'Neizdevās nosūtīt. Raksti uz martins@mai.lv.';
     }
