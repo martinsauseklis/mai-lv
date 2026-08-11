@@ -66,8 +66,11 @@ const latestArticles = (await allArticles()).slice(0, 3);
   .lead{font-size:clamp(16.5px,3.6vw,18.5px);color:var(--muted);max-width:48ch;
     margin:0 auto;line-height:1.6}
 
-  /* The hero and the form read as one block, so no rule between them. */
-  .signup-block{border-top:0;padding-top:clamp(24px,4vw,32px)}
+  /* The hero and the form read as one block, so no rule between them — and no
+     double padding either. The hero drops its bottom padding so the distance is
+     set in exactly one place: the form's padding-top on the next line. */
+  .hero{padding-bottom:0}
+  .signup-block{border-top:0;padding-top:clamp(20px,3vw,28px)}
 
   .latest h2{margin-bottom:24px}
   .latest-list{display:grid;gap:14px;max-width:900px;margin:0 auto;text-align:left}
