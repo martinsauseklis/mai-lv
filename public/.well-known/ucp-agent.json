@@ -1,0 +1,23 @@
+{
+  "ucp": {
+    "version": "2026-08-25",
+    "agent": {
+      "name": "Mārcis",
+      "description": "Household assistant. Searches products on behalf of one family in Latvia.",
+      "contact": "info@mai.lv",
+      "homepage": "https://mai.lv"
+    },
+    "services": {},
+    "capabilities": {}
+  },
+  "keys": [
+    {
+      "kid": "8RGgp5VBeWDzn0pf4aB4Arowiv781QeOI_8rqtuM_Qc",
+      "kty": "OKP",
+      "crv": "Ed25519",
+      "alg": "EdDSA",
+      "use": "sig",
+      "x": "94amggI6t0T6TALzALfSlMkAt-Mw7pvIpghVRSVSCSA"
+    }
+  ]
+}
