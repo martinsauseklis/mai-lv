@@ -27,12 +27,13 @@ export async function GET(context: APIContext) {
 
 > ${hero.apaksvirsraksts}
 
-Mārtiņš Auseklis veido mākslīgā intelekta risinājumus, kas palīdz cilvēkiem mācīties un
-apgūt jaunas prasmes, un savus risinājumus bez maksas ļauj izmēģināt mai.lv vēstkopas
-abonentiem. Risinājumi aptver tādas lietas kā gatavošanās eksāmeniem, mācību vielas
-skaidrošana latviski un prasmju trenēšana ikdienā. Mārtiņa mērķis ir padarīt mācīšanos ar
-mākslīgo intelektu drošu un saprotamu tiem, kurus neinteresē tehniskās detaļas, bet gan
-interesē tas, vai MI tiešām palīdz kaut ko apgūt.
+Mārtiņš Auseklis izstrādā mākslīgā intelekta risinājumus, kas palīdz cilvēkiem mācīties
+un apgūt jaunas prasmes. Tie noder gan gatavojoties eksāmeniem un izprotot mācību vielu
+latviešu valodā, gan regulāri pilnveidojot savas prasmes.
+
+Mārtiņa mērķis ir padarīt mācīšanos ar MI drošu, saprotamu un pieejamu arī tiem, kuri
+nevēlas iedziļināties tehniskajās detaļās, bet vēlas saprast vienu — vai mākslīgais
+intelekts patiešām palīdz mācīties un apgūt ko jaunu.
 
 ## Raksti
 
